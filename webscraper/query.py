@@ -1,7 +1,3 @@
-# script to scrap tweets by a twitter user.
-# Author - ThePythonDjango.Com
-# dependencies - BeautifulSoup, requests
-
 from bs4 import BeautifulSoup
 import requests
 import sys
@@ -10,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 
-def usage():
+def initScriptError():
     msg = """
     Please use the below command to use the script.
     python script_name.py twitter_username
@@ -84,29 +80,33 @@ def get_tweets_data(username, soup):
 def dump_data(username, tweets):
     filename = username+"_twitter.json"
     print("\nDumping data in file " + filename)
-    data = []
+    data = dict()
+    data["tweets"] = tweets
     with open(filename, 'w') as fh:
         fh.write(json.dumps(data))
-        return data 
 
     return filename
 
 
 def get_username():
-    # if username is not passed
+    # if username is not passed throw initScriptError
     if len(sys.argv) < 2:
-        usage()
+        initScriptError()
     username = sys.argv[1].strip().lower()
     if not username:
-        usage()
+        initScriptError()
 
     return username
 
+# Priming data to be trained
 def sortData(unsortedTweets):
-    unsorted = unsortedTweets
-    df = pd.DataFrame(data = unsorted)
-    csv = df.to_csv("/Users/ballasmatthew/Desktop/Websites/venvs/webscraper/test.xlsx", index = "None")
-    return csv
+    # reading out our dumped tweets and putting them in a DataFrame
+    df = pd.DataFrame(data = unsortedTweets)
+
+    # creating a csv out of dataframe
+    csv = df.to_csv("/Users/ballasmatthew/Desktop/Websites/venvs/markovChain/webscraper/test.xlsx", index = "None")
+    print("boop")
+    return
 
 
 def start(username = None):
@@ -136,11 +136,6 @@ def start(username = None):
     print(str(len(tweets))+" tweets dumped.")
 
     sortedData = sortData(tweetsDumped)
-    if (sortedData):
-        print("it works")
 
-
-
-
-
+# Initial function
 start()
